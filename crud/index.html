@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+
+    <h1>CRUD app</h1>
+
+    <form action="" id="form">
+        <p id="inputError"></p>
+        <p id="inputSuccess"></p>
+        <input type="text" id="input" placeholder="add your name">
+         <br> <br>
+        <input type="text" id="input1" placeholder="add your surname">
+         <br> <br>
+        <input type="password" id="input2" placeholder="add your password"> <br> <br>
+        
+        <div class="btn">
+            <div class="b"></div>
+            <div class="b"><button id="sub_btn">Submit</button></div>
+        </div>
+
+    </form>
+
+    <div class="dataAll">
+
+        
+        <h2>Our all data</h2>
+
+        <ul id="ul">
+            
+        </ul>
+    </div>
+
+    <script>
+     let form = document.querySelector('form')
+     let inputData = document.getElementById('input')
+     let ul = document.getElementById('ul')
+     let inputError = document.getElementById('inputError')
+     let inputSuccess = document.getElementById('inputSuccess')
+     let input1 = document.getElementById('input1')
+     let input2 = document.getElementById('input2')
+
+     let data = []
+
+     form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (inputData.value === ''|| input1.value === '' || input2.value === '') {
+            console.log('inputga toliq malumot kiriting');
+            inputError.style.display = 'block'
+            inputError.innerHTML = 'barcha inputga malumot kiriting'
+            
+            inputSuccess.style.display = 'none'
+            return;
+            
+        } else {
+            inputError.style.display = 'none'
+            inputSuccess.style.display = 'block'
+            inputSuccess.innerHTML = 'malumot kiritildi'
+            
+        }
+
+        createObjectAndAddToArray();
+        
+          
+
+     }) ;
+
+        const makeId = (data2) => {
+            if(!data2.length) {
+                return 1;
+            } else {
+                return data2[data2.length - 1].id + 1
+            }
+        }
+
+
+        ( function ()  {
+            data = JSON.parse(localStorage.getItem('data')) || [];
+            readDataAndShowInHTML()
+        })();
+
+     function createObjectAndAddToArray() {
+data.push ( {
+    name: inputData.value,
+    name1: input1.value,
+    name2: input2.value,
+    id: makeId(data),
+    
+})
+
+localStorage.setItem('data', JSON.stringify(data));
+readDataAndShowInHTML()
+console.log(data);
+
+// data.push(nameObj)
+// console.log(data);
+     }  
+
+     function deleteData(id) {
+        const idx = data.find((objId) => { 
+            objId.id === id
+        });
+
+        data.splice(idx, 1)
+        localStorage.setItem('data', JSON.stringify(data));
+        console.log(data);
+        readDataAndShowInHTML()
+        inputSuccess.innerHTML = ""
+     } 
+
+
+     function readDataAndShowInHTML() {
+        ul.innerHTML = "";
+        data.map((obj, index)=> {
+            return ul.innerHTML += `
+            <li id="list">
+                <table>
+                    <tr>
+               <td id="first"> ${index + 1} </td>
+                <td id="second"> ${obj.name} </td>
+               <td id="third"> ${obj.name1} </td>
+               <td id="four"> ${obj.name2} </td>
+                <td id= "five" > <button id="but" onclick= "updateData(this)">Update </button> </td>
+               <td id= "six"> <button onclick= "deleteData(${obj.id})" id="but2">Delete </button> </td>
+                </tr>
+                </table>          
+            </li>
+            `
+
+
+          
+         }
+         
+        
+         
+         )
+
+         inputData.value = ''
+         input1.value = ''
+         input2.value = ''
+     }
+
+    </script>
+
+</body>
+</html>
